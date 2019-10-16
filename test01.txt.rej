@@ -1,0 +1,7 @@
+diff a/test01.txt b/test01.txt	(rejected hunks)
+@@ -1 +1,2 @@
+-第一次提交
+\ No newline at end of file
++第一次提交
++第三次提交哦啊
+\ No newline at end of file
