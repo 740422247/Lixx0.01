@@ -1,18 +1,19 @@
 <template>
   <div class="experts">
     <div class="page-header">
-      <Breadcrumb :subMenus="menu"></Breadcrumb>
+      <Breadcrumb :menu="menu" :actions="BreacrumbActions" @actionMethod="actionMethod"></Breadcrumb>
       <el-card class="box-card">
         <div class="top-filter">
-          <child-forms :entity="editEntity" :model="editModel" :rules="editRules"></child-forms>
+          <child-forms :entity="editEntity" :rules="editRules" ref="result" :model="editModel"></child-forms>
         </div>
       </el-card>
     </div>
   </div>
 </template>
 <script>
-import Breadcrumb from "./../common/common-breadcrumb";
-import ChildForms from "@/components/base/childhood-forms";
+import GetBreadcrumb from "./../common/breadcrumbCommon";
+import Breadcrumb from "@/components/childhood-breadcrumb/childhood-breadcrumb";
+import ChildForms from "@/components/base/childhood-forms.vue";
 import ChildBtns from "@/components/base/childhood-btns";
 export default {
   components: {
@@ -21,9 +22,27 @@ export default {
     ChildForms
   },
   data: () => ({
-    menu: [{ path: "", label: "专家库" }, { path: "", label: "编辑专家" }],
+    // 面包屑导航配置
+    menu: [
+      GetBreadcrumb,
+      { path: "", label: "专家库" },
+      { path: "", label: "编辑专家" }
+    ],
+    BreacrumbActions: [
+      {
+        label: "返回",
+        icon: "el-icon-delete",
+        key: "delete"
+      },
+      {
+        label: "保存",
+        icon: "el-icon-edit",
+        key: "edit"
+      }
+    ],
+    // 编辑表单配置
     editEntity: [
-      { label: "姓名", key: "name"},
+      { label: "姓名", key: "name" },
       { label: "电话号码", key: "phone" },
       { label: "身份证号", key: "idNum" },
 
@@ -38,13 +57,15 @@ export default {
         ]
       }
     ],
-    editModel: {},
+    editModel: { name: "aaaa", phone: "123456456", state: "use" },
     editRules: {
       name: [
         {
           validator: (rule, value, callback) => {
             if (!value) {
               return callback(new Error("姓名不能为空"));
+            } else {
+              callback();
             }
           },
           trigger: "blur"
@@ -57,12 +78,22 @@ export default {
               return callback(new Error("电话号码不能为空"));
             } else if (!/^1[345789]\d{9}$/.test(value)) {
               return callback(new Error("电话号码不合法，请核实后重新输入"));
+            } else {
+              callback();
             }
           },
           trigger: "blur"
         }
       ]
     }
-  })
+  }),
+  mounted() {
+    console.log(this.menu);
+  },
+  methods: {
+    actionMethod(key, action) {
+      console.log("actionMethod:", key, action);
+    }
+  }
 };
 </script>

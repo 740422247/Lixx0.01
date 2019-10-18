@@ -1,7 +1,7 @@
 <template>
   <div class="menu-manager">
     <div class="page-header">
-      <Breadcrumb :subMenus="menu"></Breadcrumb>
+      <Breadcrumb :menu="menu"></Breadcrumb>
       <el-card class="box-card">
         <child-btns :entity="btnsEntity" @action="action"></child-btns>
         <div class="top-filter">
@@ -40,12 +40,13 @@
     </div>
 
     <!-- 编辑提示 -->
-    <child-dialog :edit="edit" ref="edit" :entity="editEntity" @ok="saveEdit"></child-dialog>
+    <child-dialog :edit="edit" :rules="editRules" ref="edit" :entity="editEntity" @ok="saveEdit"></child-dialog>
     <!-- 编辑提示 -->
   </div>
 </template>
 <script>
-import Breadcrumb from "./../common/common-breadcrumb";
+import GetBreadcrumb from "./../common/breadcrumbCommon";
+import Breadcrumb from "@/components/childhood-breadcrumb/childhood-breadcrumb";
 import ChildhoodTable from "@/components/table/childhood-table";
 import ChildDialog from "@/components/base/child-dialog";
 import ChildForms from "@/components/base/childhood-forms";
@@ -105,8 +106,8 @@ export default {
     isDelete: false,
     edit: {
       title: "编辑菜单",
-      labelWidth: "80px",
-      width: "500px"
+      labelWidth: "120px",
+      width: "1000px"
     },
     editRules: {
       cost: [
@@ -114,6 +115,20 @@ export default {
           validator: (rule, value, callback) => {
             if (!value) {
               callback(new Error("请输入菜单编码"));
+            } else {
+              callback();
+            }
+          },
+          trigger: "blur"
+        }
+      ],
+      name: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback(new Error("请输入菜单名称"));
+            } else {
+              callback();
             }
           },
           trigger: "blur"
@@ -121,13 +136,14 @@ export default {
       ]
     },
     editEntity: [
-      { label: "上级菜单", key: "address" },
-      { label: "菜单编码", key: "cost" },
-      { label: "日期", key: "date", type: "datetime" },
-      { label: "菜单名称", key: "name" },
+      { label: "上级菜单", key: "address", className: "is-2-1" },
+      { label: "菜单编码", key: "cost", className: "is-2-1" },
+      { label: "日期", key: "date", type: "datetime", className: "is-2-1" },
+      { label: "菜单名称", key: "name", className: "is-2-1" },
       {
         label: "状态",
         key: "state",
+        className: "is-2-1",
         type: "select",
         options: [
           { label: "全部", value: "all" },
@@ -135,9 +151,9 @@ export default {
           { label: "已", value: "use" }
         ]
       },
-      { label: "备注", key: "remark", type: "textarea" }
+      { label: "备注", key: "remark", type: "textarea", className: "is-3" }
     ],
-    menu: [{ path: "", label: "菜单管理" }],
+    menu: [GetBreadcrumb,{ path: "", label: "菜单管理" }],
 
     // 表格设置
     tableDataCol: [
@@ -327,7 +343,7 @@ export default {
       this.editNode();
     },
     saveEdit(model) {
-      console.log("save:", model);
+      // console.log("save:", model);
     },
     addNode(data) {
       console.log(data);

@@ -12,6 +12,7 @@
 </template>
 <script>
 export default {
+  name:'ChildBtns',
   props: {
     entity: { type: Array },
     state: { type: Object }

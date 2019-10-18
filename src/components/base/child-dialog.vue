@@ -6,15 +6,16 @@
       :modal="false"
       :width="edit.width ? edit.width : '500px'"
     >
-
-      <el-form :model="edit.editForm" class="demo-form-inline">
+      <el-form :model="model" class="demo-form-inline demo-ruleForm" :rules="rules" ref="model">
         <el-form-item
           :label="item.label"
           :label-width="edit.labelWidth ? edit.labelWidth : '80px'"
-          v-for="(item) in editForm"
+          v-for="(item) in entity"
           :key="item.key"
+          :prop="item.key"
+          :class="item.className"
         >
-          <el-select v-model="item.val" v-if="item.type === 'select'">
+          <el-select v-model="model[item.key]" v-if="item.type === 'select'">
             <el-option
               :label="opt.label"
               :value="opt.value"
@@ -25,14 +26,14 @@
 
           <el-date-picker
             v-else-if="item.type === 'datetime' || item.type === 'date'"
-            v-model="item.val"
+            v-model="model[item.key]"
             :type="item.type"
             :placeholder="item.type === 'date' ? '选择日期':'选择时间'"
           ></el-date-picker>
 
           <el-input
             v-else
-            v-model="item.val"
+            v-model="model[item.key]"
             auto-complete="off"
             :type="item.type ? item.type : 'text'"
             rows="3"
@@ -51,32 +52,34 @@
 export default {
   props: {
     edit: { type: Object },
-    entity: { type: Array }
+    entity: { type: Array },
+    rules: { type: Object }
   },
   data: () => ({
     editDialog: false,
-    editForm: []
+    model: {}
   }),
+
   methods: {
     showDialog(data) {
       if (!data) {
         data = {};
       }
-      this.editForm = this.entity.map(item => {
-        return {
-          ...item,
-          val: data[item.key]
-        };
-      });
+      this.model = { ...data };
+
       this.editDialog = true;
     },
     ok() {
-      let forms = {};
-      this.editForm.forEach(item => {
-        forms[item.key] = item.val;
+      this.$refs["model"].validate(valid => {
+        console.log(valid);
+        if (valid) {
+          this.$emit("ok", this.model);
+          this.editDialog = false;
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
       });
-      this.$emit("ok", forms);
-      this.editDialog = false;
     }
   }
 };
@@ -89,5 +92,20 @@ export default {
 .child-dialog .el-date-editor.el-input,
 .child-dialog .el-date-editor.el-input__inner {
   width: 100%;
+}
+.child-dialog .el-dialog__wrapper {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.is-2-1 {
+  width: 50% !important;
+}
+.is-3-1 {
+  width: 33% !important;
+}
+.is-3-2 {
+  width: 66% !important;
+}
+.is-full {
+  width: 100% !important;
 }
 </style>

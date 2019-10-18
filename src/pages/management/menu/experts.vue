@@ -1,7 +1,7 @@
 <template>
   <div class="experts">
     <div class="page-header">
-      <Breadcrumb :subMenus="menu"></Breadcrumb>
+      <Breadcrumb :menu="menu"></Breadcrumb>
       <el-card class="box-card">
         <child-btns :entity="btnsEntity" @action="action"></child-btns>
         <div class="top-filter">
@@ -21,7 +21,8 @@
   </div>
 </template>
 <script>
-import Breadcrumb from "./../common/common-breadcrumb";
+import GetBreadcrumb from "./../common/breadcrumbCommon";
+import Breadcrumb from "@/components/childhood-breadcrumb/childhood-breadcrumb";
 import ChildForms from "@/components/base/childhood-forms";
 import ChildBtns from "@/components/base/childhood-btns";
 import ChildhoodTable from "@/components/table/childhood-table";
@@ -41,7 +42,7 @@ export default {
   },
   data: () => ({
     // 面包屑导航
-    menu: [{ path: "", label: "专家库" }],
+    menu: [GetBreadcrumb,{ path: "", label: "专家库" }],
     // 按钮实体
     btnsEntity: [
       {

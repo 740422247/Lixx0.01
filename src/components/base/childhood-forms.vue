@@ -1,10 +1,10 @@
 
 <template>
-  <el-form :model="model" :rules="rules" ref="model" class="demo-form-inline demo-ruleForm">
+  <el-form :model="showModel" :rules="rules" ref="showModel" class="demo-form-inline demo-ruleForm">
     <el-form-item
       :label="item.label"
       :label-width="item.labelWidth ? item.labelWidth : '120px'"
-      v-for="(item) in showForms"
+      v-for="(item) in entity"
       :key="item.key"
       :prop="item.key"
       :class="item.className"
@@ -13,10 +13,11 @@
         <el-button type="text" icon="el-icon-arrow-down" @click="flod" v-if="!item.showFold">更多搜索条件</el-button>
         <el-button type="primary" plain @click="search">查询</el-button>
       </div>
+
       <el-select
         @change="change"
         :disabled="item.disabled"
-        v-model="item.val"
+        v-model="showModel[item.key]"
         v-else-if="item.type === 'select'"
       >
         <el-option
@@ -30,7 +31,7 @@
       <el-date-picker
         @change="change"
         v-else-if="item.type === 'datetime' || item.type === 'date'"
-        v-model="item.val"
+        v-model="showModel[item.key]"
         :type="item.type"
         :disabled="item.disabled"
         :value-format="item.type === 'datetime' ? 'yyyy-MM-dd hh:MM:ss':'yyyy-MM-dd'"
@@ -40,7 +41,7 @@
       <el-input
         v-else
         :disabled="item.disabled"
-        v-model="model[item.key]"
+        v-model="showModel[item.key]"
         @input="change"
         auto-complete="off"
         :type="item.type ? item.type : 'text'"
@@ -65,8 +66,9 @@ export default {
     disabled: { type: Boolean }
   },
   data: () => ({
-    showForms: [],
-    showMore: false
+    showModel: {},
+    showMore: false,
+    isValid: true
   }),
   mounted() {
     this.refresh();
@@ -76,14 +78,7 @@ export default {
       if (!this.model) {
         this.model = {};
       }
-      this.showForms = this.entity.map(item => {
-        if (item.key === "search") {
-          console.error("search为内置关键字，key值不能为search");
-          return;
-        }
-        // this.model[item.key] = this.model[item.key] ? this.model[item.key] : "";
-        return { ...item, val: this.model[item.key] };
-      });
+      this.showModel = { ...this.model };
 
       // 过滤查询按钮
       if (!this.showSearch) {
@@ -93,30 +88,43 @@ export default {
 
       const btn = { type: "search" };
 
-      if (this.showForms.length <= 2) {
-        this.showForms.push({ ...btn, showFold: true });
+      if (this.entity.length <= 2) {
+        this.entity.push({ ...btn, showFold: true });
       } else {
-        this.showForms.splice(2, 0, btn);
+        this.entity.splice(2, 0, btn);
       }
     },
     // 变化触发方法
     change() {
-      this.$emit("change", this.getResult());
+      this.$emit("change", this.showModel);
     },
 
     // 获取表单结果
     getResult() {
-      let forms = {};
-      this.showForms.forEach(item => {
-        if (item.type != "search") {
-          forms[item.key] = item.val;
+      if (!this.rules) {
+        return this.showModel;
+      }
+
+      this.$refs["showModel"].validate(valid => {
+        if (valid) {
+          this.isValid = true;
+        } else {
+          console.warn("error submit!!");
+          this.isValid = false;
+          return false;
         }
       });
-      return forms;
+
+      if (this.isValid) {
+        return this.showModel;
+      } else {
+        console.warn("数据验证失败，数据无法返回，请检查");
+        return "数据验证失败，如果想取消验证，无需传入rules属性"
+      }
     },
     // 查询触发事件
     search() {
-      this.$emit("search", this.getResult());
+      this.$emit("search", this.showModel);
     },
     // 展开效果
     flod() {
@@ -129,7 +137,7 @@ export default {
     },
     // 获取最大高度
     getMaxHeight() {
-      return (parseInt(this.showForms.length / 3) + 1) * 62;
+      return (parseInt(this.entity.length / 3) + 1) * 62;
     },
     // 设置搜索高度
     setHeight(num) {
