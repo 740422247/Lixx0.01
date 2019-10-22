@@ -4,6 +4,7 @@
 
     <el-table
       :data="tableData"
+      :show-summary="summary"
       stripe
       style="width: 100%"
       :border="showBorder"
@@ -14,7 +15,7 @@
       <el-table-column type="selection" width="55" v-if="isSelection" align="center"></el-table-column>
       <!-- 序号 -->
 
-      <el-table-column type="index" v-if="showIndex"></el-table-column>
+      <el-table-column type="index" v-if="showIndex || summary"></el-table-column>
       <!-- 列信息 -->
       <el-table-column
         v-for="(col,index) in tableDataCol"
@@ -89,6 +90,7 @@ export default {
       required: true
     },
     isSelection: { type: Boolean },
+    summary: { type: Boolean },
     tool: { type: Object },
     paganations: { type: Object },
     showIndex: { type: Boolean },

@@ -33,6 +33,7 @@
           :tableDataCol="tableDataCol"
           :tool="tool"
           :showBorder="true"
+          summary
           :paganations="paganations"
           @handel="handelMethod"
         ></childhood-table>
@@ -153,7 +154,7 @@ export default {
       },
       { label: "备注", key: "remark", type: "textarea", className: "is-3" }
     ],
-    menu: [GetBreadcrumb,{ path: "", label: "菜单管理" }],
+    menu: [GetBreadcrumb, { path: "", label: "菜单管理" }],
 
     // 表格设置
     tableDataCol: [
@@ -210,25 +211,25 @@ export default {
         date: "2016-05-04",
         name: "王小虎2",
         address: "上海市普陀区金沙江路 1517 ",
-        cost: 7500.25
+        cost: "7500.25"
       },
       {
         date: "2016-05-04",
         name: "王小虎2",
         address: "上海市普陀区金沙江路 1517 ",
-        cost: 7500.25
+        cost: "7500.25"
       },
       {
         date: "2016-05-01",
         name: "王小虎3",
         address: "上海市普陀区金沙江路 1519 弄",
-        cost: 6825.15
+        cost: "6825.15"
       },
       {
         date: "2016-05-03",
         name: "王小虎4",
         address: "上海市普陀区金沙江路 1516 弄",
-        cost: 6500.22
+        cost: "6500.22"
       }
     ],
     // 树形结构
