@@ -132,6 +132,7 @@ export default {
 .table-container {
   padding: 16px;
   box-shadow: 0 0 5px 0px #ccc;
+  background-color: #fff;
 }
 .el-table .cell {
   white-space: pre;

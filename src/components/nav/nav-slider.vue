@@ -5,8 +5,7 @@
       :collapse="switchFlag === 3"
       v-for="(item) in menu"
       :key="item.label"
-      :background-color="(switchFlag === 1) ? '' :'#00abf3'"
-      :text-color="(switchFlag === 1) ? '' :'#fff'"
+      :background-color="(switchFlag === 1) ? '' :'#fff'"
       :active-text-color="(switchFlag === 1) ? '' :'#4574f1'"
     >
       <el-submenu :index="item.fullPathId">
@@ -109,6 +108,7 @@ export default {
 .content-container.tradition .nav-left .nav-slider,
 .content-container.tradition .nav-left .nav-slider .el-menu {
   background-color: rgba(0, 0, 0, 0);
+  border-right: none;
 }
 .content-container.tradition .nav-left .nav-slider .el-menu .el-submenu__title {
   color: #fff;

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     switchMenu() {
-      this.switchFlag = this.switchFlag === 2 ? 1 : this.switchFlag + 1;
+      this.switchFlag = this.switchFlag === 3 ? 1 : this.switchFlag + 1;
     }
   }
 };
@@ -79,6 +79,7 @@ export default {
 }
 .content-container.tradition .container {
   border-radius: 0;
+  background-color: #f1f1f1;
   /* transition: all 0.5s ease; */
 }
 .content-container .nav-left {
@@ -89,7 +90,7 @@ export default {
 .content-container.tradition .nav-left {
   padding-right: 0;
   /* background: linear-gradient(180deg, #4574f1 0, #00abf3); */
-  background-color: #00abf3;
+  background-color: #fff;
 }
 .content-container.tradition.small .nav-left {
   flex: 0 0 64px;
