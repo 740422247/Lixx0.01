@@ -1,6 +1,6 @@
 
 <template>
-  <el-form :model="showModel" :rules="rules" ref="showModel" class="demo-form-inline demo-ruleForm">
+  <el-form :model="showModel" :rules="dynRules" ref="showModel" class="demo-form-inline demo-ruleForm">
     <el-form-item
       :label="item.label"
       :label-width="item.labelWidth ? item.labelWidth : '120px'"
@@ -8,6 +8,7 @@
       :key="item.key"
       :prop="item.key"
       :class="item.className"
+      v-show="!item.visible"
     >
       <div class="searchBtn" v-if="item.type === 'search'">
         <el-button type="text" icon="el-icon-arrow-down" @click="flod" v-if="!item.showFold">更多搜索条件</el-button>
@@ -42,7 +43,7 @@
         v-else
         :disabled="item.disabled"
         v-model="showModel[item.key]"
-        @input="change"
+        @input="change(item)"
         auto-complete="off"
         :type="item.type ? item.type : 'text'"
         rows="3"
@@ -67,7 +68,10 @@ export default {
   },
   data: () => ({
     showModel: {},
+    dynRules: {},
+    // 展开查询按钮
     showMore: false,
+    // 验证是否通过
     isValid: true
   }),
   mounted() {
@@ -78,6 +82,7 @@ export default {
       if (!this.model) {
         this.model = {};
       }
+      this.dynRules = { ...this.rules };
       this.showModel = { ...this.model };
 
       // 过滤查询按钮
@@ -95,13 +100,17 @@ export default {
       }
     },
     // 变化触发方法
-    change() {
+    change(item) {
+      if (item.expression) {
+        item.expression(this.showModel);
+      }
       this.$emit("change", this.showModel);
     },
 
     // 获取表单结果
     getResult() {
-      if (!this.rules) {
+
+      if (!this.dynRules) {
         return this.showModel;
       }
 
@@ -119,7 +128,7 @@ export default {
         return this.showModel;
       } else {
         console.warn("数据验证失败，数据无法返回，请检查");
-        return "数据验证失败，如果想取消验证，无需传入rules属性"
+        return "数据验证失败，如果想取消验证，无需传入rules属性";
       }
     },
     // 查询触发事件
@@ -137,7 +146,9 @@ export default {
     },
     // 获取最大高度
     getMaxHeight() {
-      return (parseInt(this.entity.length / 3) + 1) * 62;
+      return !(this.entity.length % 3)
+        ? parseInt(this.entity.length / 3) * 70
+        : (parseInt(this.entity.length / 3) + 1) * 70;
     },
     // 设置搜索高度
     setHeight(num) {

@@ -42,13 +42,14 @@ export default {
   },
   data: () => ({
     // 面包屑导航
-    menu: [GetBreadcrumb,{ path: "", label: "专家库" }],
+    menu: [GetBreadcrumb, { path: "", label: "专家库" }],
     // 按钮实体
     btnsEntity: [
       {
         label: "新增",
         icon: "el-icon-circle-plus-outline",
-        key: "add"
+        key: "add",
+        visible: false
       },
       {
         label: "修改",
@@ -147,7 +148,10 @@ export default {
     handelMethod({ name, row }) {
       console.log("experts table:", row);
       if (name === "linkTo") {
-        this.$router.push({ path: "/expertsEdit", params: { id: row.idNumer } });
+        this.$router.push({
+          path: "/expertsEdit",
+          params: { id: row.idNumer }
+        });
       }
     },
     initTable() {

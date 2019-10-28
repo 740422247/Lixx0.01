@@ -7,6 +7,7 @@
       :type="item.type"
       :disabled="item.disabled"
       @click="clickButton(item.key,item)"
+      v-show="!item.visible"
     >{{item.label}}</el-button>
   </div>
 </template>

@@ -4,7 +4,13 @@
       <Breadcrumb :menu="menu" :actions="BreacrumbActions" @actionMethod="actionMethod"></Breadcrumb>
       <el-card class="box-card">
         <div class="top-filter">
-          <child-forms :entity="editEntity" :rules="editRules" ref="result" :model="editModel"></child-forms>
+          <child-forms
+            :entity="editEntity"
+            :rules="editRules"
+            ref="result"
+            @change="change"
+            :model="editModel"
+          ></child-forms>
         </div>
       </el-card>
     </div>
@@ -42,9 +48,24 @@ export default {
     ],
     // 编辑表单配置
     editEntity: [
-      { label: "姓名", key: "name" },
-      { label: "电话号码", key: "phone" },
-      { label: "身份证号", key: "idNum" },
+      { label: "姓名", key: "name",type:'text' },
+      { label: "电话号码", key: "phone", visible: false },
+      {
+        label: "身份证号",
+        key: "idNum",
+        expression: model => {
+          if (model.idNum.length === 3) {
+            model.age = 25;
+          } else if (model.idNum.length === 5) {
+            model.sex = "男";
+          } else {
+            model.age = "";
+            model.sex = "";
+          }
+        }
+      },
+      { label: "性别", key: "sex", disabled: true },
+      { label: "年龄", key: "age", disabled: true },
 
       {
         label: "状态",
@@ -57,7 +78,7 @@ export default {
         ]
       }
     ],
-    editModel: { name: "aaaa", phone: "123456456", state: "use" },
+    editModel: { phone: "1358464586" },
     editRules: {
       name: [
         {
@@ -88,11 +109,21 @@ export default {
     }
   }),
   mounted() {
-    console.log(this.menu);
+    // console.log(this.menu);
   },
   methods: {
     actionMethod(key, action) {
-      console.log("actionMethod:", key, action);
+      console.log("actionMethod:", action, key);
+      if (action.key === "edit") {
+        this.save();
+      }
+    },
+    save() {
+      const res = this.$refs.result.getResult();
+      console.log(res);
+    },
+    change(model) {
+      console.log("change:", model);
     }
   }
 };
