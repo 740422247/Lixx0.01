@@ -1,6 +1,6 @@
 
 <template>
-  <el-form :model="showModel" :rules="dynRules" ref="showModel" class="demo-form-inline demo-ruleForm">
+  <el-form :model="showModel" :rules="rules" ref="showModel" class="demo-form-inline demo-ruleForm">
     <el-form-item
       :label="item.label"
       :label-width="item.labelWidth ? item.labelWidth : '120px'"
@@ -8,7 +8,6 @@
       :key="item.key"
       :prop="item.key"
       :class="item.className"
-      v-show="!item.visible"
     >
       <div class="searchBtn" v-if="item.type === 'search'">
         <el-button type="text" icon="el-icon-arrow-down" @click="flod" v-if="!item.showFold">更多搜索条件</el-button>
@@ -61,19 +60,21 @@
 export default {
   props: {
     entity: { type: Array },
-    rules: { type: Object },
     model: { type: Object },
     showSearch: { type: Boolean },
     disabled: { type: Boolean }
   },
   data: () => ({
     showModel: {},
-    dynRules: {},
+    rules: {},
     // 展开查询按钮
     showMore: false,
     // 验证是否通过
     isValid: true
   }),
+  created() {
+    this.initRules();
+  },
   mounted() {
     this.refresh();
   },
@@ -82,7 +83,7 @@ export default {
       if (!this.model) {
         this.model = {};
       }
-      this.dynRules = { ...this.rules };
+
       this.showModel = { ...this.model };
 
       // 过滤查询按钮
@@ -99,6 +100,17 @@ export default {
         this.entity.splice(2, 0, btn);
       }
     },
+
+    // 处理验证规则
+    initRules() {
+      this.entity.forEach(item => {
+        if (item.rules) {
+          this.rules[item.key] = item.rules;
+        }
+      });
+      console.log("rules1", this.rules);
+    },
+
     // 变化触发方法
     change(item) {
       if (item.expression) {
@@ -109,8 +121,7 @@ export default {
 
     // 获取表单结果
     getResult() {
-
-      if (!this.dynRules) {
+      if (!this.rules) {
         return this.showModel;
       }
 

@@ -6,7 +6,6 @@
         <div class="top-filter">
           <child-forms
             :entity="editEntity"
-            :rules="editRules"
             ref="result"
             @change="change"
             :model="editModel"
@@ -48,8 +47,42 @@ export default {
     ],
     // 编辑表单配置
     editEntity: [
-      { label: "姓名", key: "name",type:'text' },
-      { label: "电话号码", key: "phone", visible: false },
+      {
+        label: "姓名",
+        key: "name",
+        type: "text",
+        rules: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("姓名不能为空"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ]
+      },
+      {
+        label: "电话号码",
+        key: "phone",
+        visible: true,
+        rules: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("电话号码不能为空"));
+              } else if (!/^1[345789]\d{9}$/.test(value)) {
+                return callback(new Error("电话号码不合法，请核实后重新输入"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ]
+      },
       {
         label: "身份证号",
         key: "idNum",
