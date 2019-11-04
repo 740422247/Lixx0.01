@@ -9,6 +9,7 @@
             ref="result"
             @change="change"
             :model="editModel"
+            :state="state"
           ></child-forms>
         </div>
       </el-card>
@@ -104,47 +105,26 @@ export default {
         label: "状态",
         key: "state",
         type: "select",
-        options: [
-          { label: "全部", value: "all" },
-          { label: "已出库", value: "nouse" },
-          { label: "正常", value: "use" }
-        ]
+        options: "state"
       }
     ],
     editModel: { phone: "1358464586" },
-    editRules: {
-      name: [
-        {
-          validator: (rule, value, callback) => {
-            if (!value) {
-              return callback(new Error("姓名不能为空"));
-            } else {
-              callback();
-            }
-          },
-          trigger: "blur"
-        }
-      ],
-      phone: [
-        {
-          validator: (rule, value, callback) => {
-            if (!value) {
-              return callback(new Error("电话号码不能为空"));
-            } else if (!/^1[345789]\d{9}$/.test(value)) {
-              return callback(new Error("电话号码不合法，请核实后重新输入"));
-            } else {
-              callback();
-            }
-          },
-          trigger: "blur"
-        }
-      ]
+    state: {
+      state: []
     }
   }),
   mounted() {
     // console.log(this.menu);
+    this.init();
   },
   methods: {
+    init() {
+      this.state.state = [
+        { label: "全部", value: "all" },
+        { label: "已出库", value: "nouse" },
+        { label: "正常", value: "use" }
+      ];
+    },
     actionMethod(key, action) {
       console.log("actionMethod:", action, key);
       if (action.key === "edit") {

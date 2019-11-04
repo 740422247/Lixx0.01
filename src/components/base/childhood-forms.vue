@@ -23,7 +23,7 @@
         <el-option
           :label="opt.label"
           :value="opt.value"
-          v-for="opt in item.options"
+          v-for="opt in state[item.options]"
           :key="opt.value"
         ></el-option>
       </el-select>
@@ -61,6 +61,7 @@ export default {
   props: {
     entity: { type: Array },
     model: { type: Object },
+    state: { type: Object },
     showSearch: { type: Boolean },
     disabled: { type: Boolean }
   },
@@ -108,7 +109,6 @@ export default {
           this.rules[item.key] = item.rules;
         }
       });
-      console.log("rules1", this.rules);
     },
 
     // 变化触发方法
