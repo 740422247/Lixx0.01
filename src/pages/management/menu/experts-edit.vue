@@ -70,6 +70,7 @@ export default {
         key: "phone",
         visible: true,
         rules: [
+          { required: true, message: "电话号码不能为空", trigger: "blur" },
           {
             validator: (rule, value, callback) => {
               if (!value) {
