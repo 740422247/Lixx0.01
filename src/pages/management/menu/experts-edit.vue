@@ -8,8 +8,8 @@
             :entity="editEntity"
             ref="result"
             @change="change"
+            :state="state1"
             :model="editModel"
-            :state="state"
           ></child-forms>
         </div>
       </el-card>
@@ -106,11 +106,11 @@ export default {
         label: "状态",
         key: "state",
         type: "select",
-        options: "state"
+        options: "state" //[{ label: "全部", value: "all" }]
       }
     ],
     editModel: { phone: "1358464586" },
-    state: {
+    state1: {
       state: []
     }
   }),
@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     init() {
-      this.state.state = [
+      this.state1.state = [
         { label: "全部", value: "all" },
         { label: "已出库", value: "nouse" },
         { label: "正常", value: "use" }

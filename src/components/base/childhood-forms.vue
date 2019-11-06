@@ -23,7 +23,7 @@
         <el-option
           :label="opt.label"
           :value="opt.value"
-          v-for="opt in state[item.options]"
+          v-for="opt in getOptions(item.options)"
           :key="opt.value"
         ></el-option>
       </el-select>
@@ -80,6 +80,13 @@ export default {
     this.refresh();
   },
   methods: {
+    getOptions(flat) {
+      if (typeof flat == "string") {
+        return this.state[flat];
+      } else {
+        return flat;
+      }
+    },
     refresh() {
       if (!this.model) {
         this.model = {};
