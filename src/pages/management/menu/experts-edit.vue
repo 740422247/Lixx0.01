@@ -68,7 +68,6 @@ export default {
       {
         label: "电话号码",
         key: "phone",
-        visible: true,
         rules: [
           { required: true, message: "电话号码不能为空", trigger: "blur" },
           {
@@ -88,7 +87,7 @@ export default {
       {
         label: "身份证号",
         key: "idNum",
-        expression: model => {
+        expression: (model, val) => {
           if (model.idNum.length === 3) {
             model.age = 25;
           } else if (model.idNum.length === 5) {
@@ -99,14 +98,22 @@ export default {
           }
         }
       },
-      { label: "性别", key: "sex", disabled: true },
+      { label: "性别", key: "sex", disabled: true, invisible: true },
       { label: "年龄", key: "age", disabled: true },
-
       {
         label: "状态",
         key: "state",
         type: "select",
-        options: "state" //[{ label: "全部", value: "all" }]
+        options: "state", //[{ label: "全部", value: "all" }]
+        expression: (model, val) => {
+          if (val === "nouse") {
+            console.log(this.entity)
+          } else {
+            // entity.age.invisible = false;
+            // entity.sex.invisible = false;
+            // entity.idNum.invisible = false;
+          }
+        }
       }
     ],
     editModel: { phone: "1358464586" },

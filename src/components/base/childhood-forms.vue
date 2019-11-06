@@ -1,53 +1,59 @@
 
 <template>
   <el-form :model="showModel" :rules="rules" ref="showModel" class="demo-form-inline demo-ruleForm">
-    <el-form-item
-      :label="item.label"
-      :label-width="item.labelWidth ? item.labelWidth : '120px'"
-      v-for="(item) in entity"
-      :key="item.key"
-      :prop="item.key"
-      :class="item.className"
-    >
-      <div class="searchBtn" v-if="item.type === 'search'">
-        <el-button type="text" icon="el-icon-arrow-down" @click="flod" v-if="!item.showFold">更多搜索条件</el-button>
-        <el-button type="primary" plain @click="search">查询</el-button>
-      </div>
-
-      <el-select
-        @change="change"
-        :disabled="item.disabled"
-        v-model="showModel[item.key]"
-        v-else-if="item.type === 'select'"
+    <div v-for="(item) in entity" :key="item.key" style="display:contents">
+      <el-form-item
+        :label="item.label"
+        :label-width="item.labelWidth ? item.labelWidth : '120px'"
+        :prop="item.key"
+        :class="item.className"
+        v-if="!item.invisible"
       >
-        <el-option
-          :label="opt.label"
-          :value="opt.value"
-          v-for="opt in getOptions(item.options)"
-          :key="opt.value"
-        ></el-option>
-      </el-select>
+        <div class="searchBtn" v-if="item.type === 'search'">
+          <el-button
+            type="text"
+            icon="el-icon-arrow-down"
+            @click="flod"
+            v-if="!item.showFold"
+          >更多搜索条件</el-button>
+          <el-button type="primary" plain @click="search">查询</el-button>
+        </div>
 
-      <el-date-picker
-        @change="change"
-        v-else-if="item.type === 'datetime' || item.type === 'date'"
-        v-model="showModel[item.key]"
-        :type="item.type"
-        :disabled="item.disabled"
-        :value-format="item.type === 'datetime' ? 'yyyy-MM-dd hh:MM:ss':'yyyy-MM-dd'"
-        :placeholder="item.type === 'date' ? '选择日期':'选择时间'"
-      ></el-date-picker>
+        <el-select
+          @change="change(item)"
+          :disabled="item.disabled"
+          v-model="showModel[item.key]"
+          v-else-if="item.type === 'select'"
+        >
+          <el-option
+            :label="opt.label"
+            :value="opt.value"
+            v-for="opt in getOptions(item.options)"
+            :key="opt.value"
+          ></el-option>
+        </el-select>
 
-      <el-input
-        v-else
-        :disabled="item.disabled"
-        v-model="showModel[item.key]"
-        @input="change(item)"
-        auto-complete="off"
-        :type="item.type ? item.type : 'text'"
-        rows="3"
-      ></el-input>
-    </el-form-item>
+        <el-date-picker
+          @change="change(item)"
+          v-else-if="item.type === 'datetime' || item.type === 'date'"
+          v-model="showModel[item.key]"
+          :type="item.type"
+          :disabled="item.disabled"
+          :value-format="item.type === 'datetime' ? 'yyyy-MM-dd hh:MM:ss':'yyyy-MM-dd'"
+          :placeholder="item.type === 'date' ? '选择日期':'选择时间'"
+        ></el-date-picker>
+
+        <el-input
+          v-else
+          :disabled="item.disabled"
+          v-model="showModel[item.key]"
+          @input="change(item)"
+          auto-complete="off"
+          :type="item.type ? item.type : 'text'"
+          rows="3"
+        ></el-input>
+      </el-form-item>
+    </div>
   </el-form>
 </template>
 <script>
@@ -121,7 +127,7 @@ export default {
     // 变化触发方法
     change(item) {
       if (item.expression) {
-        item.expression(this.showModel);
+        item.expression(this.showModel, this.showModel[item.key]);
       }
       this.$emit("change", this.showModel);
     },
@@ -164,9 +170,10 @@ export default {
     },
     // 获取最大高度
     getMaxHeight() {
-      return !(this.entity.length % 3)
-        ? parseInt(this.entity.length / 3) * 70
-        : (parseInt(this.entity.length / 3) + 1) * 70;
+      const showEntity = this.entity.filter(item => !item.invisible);
+      return !(showEntity.length % 3)
+        ? parseInt(showEntity.length / 3) * 70
+        : (parseInt(showEntity.length / 3) + 1) * 70;
     },
     // 设置搜索高度
     setHeight(num) {
