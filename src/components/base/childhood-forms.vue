@@ -130,13 +130,23 @@ export default {
         item.expression(this.showModel, this.showModel[item.key], this.entity);
         this.setHeight(this.getMaxHeight());
       }
-      this.$emit("change", this.showModel);
+      this.$emit("change", this.getModelData());
+    },
+    // 获取可视数据
+    getModelData() {
+      let data = {};
+      this.entity.forEach(item => {
+        if (!item.invisible) {
+          data[item.key] = this.showModel[item.key];
+        }
+      });
+      return data;
     },
 
     // 获取表单结果
     getResult() {
       if (!this.rules) {
-        return this.showModel;
+        return this.getModelData();
       }
 
       this.$refs["showModel"].validate(valid => {
@@ -150,7 +160,7 @@ export default {
       });
 
       if (this.isValid) {
-        return this.showModel;
+        return this.getModelData();
       } else {
         console.warn("数据验证失败，数据无法返回，请检查");
         return "数据验证失败，如果想取消验证，无需传入rules属性";
@@ -158,7 +168,7 @@ export default {
     },
     // 查询触发事件
     search() {
-      this.$emit("search", this.showModel);
+      this.$emit("search", this.getModelData());
     },
     // 展开效果
     flod() {
