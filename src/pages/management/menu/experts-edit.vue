@@ -105,13 +105,28 @@ export default {
         key: "state",
         type: "select",
         options: "state", //[{ label: "全部", value: "all" }]
-        expression: (model, val) => {
+        expression: (model, val, entity) => {
           if (val === "nouse") {
-            console.log(this.entity)
+            for (let i = 0; i < entity.length; i++) {
+              if (
+                entity[i].key === "age" ||
+                entity[i].key === "sex" ||
+                entity[i].key === "idNum"
+              ) {
+                console.log("key:", entity[i].key);
+                entity[i].invisible = true;
+              }
+            }
           } else {
-            // entity.age.invisible = false;
-            // entity.sex.invisible = false;
-            // entity.idNum.invisible = false;
+            for (let i = 0; i < entity.length; i++) {
+              if (
+                entity[i].key === "age" ||
+                entity[i].key === "sex" ||
+                entity[i].key === "idNum"
+              ) {
+                entity[i].invisible = false;
+              }
+            }
           }
         }
       }

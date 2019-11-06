@@ -127,7 +127,8 @@ export default {
     // 变化触发方法
     change(item) {
       if (item.expression) {
-        item.expression(this.showModel, this.showModel[item.key]);
+        item.expression(this.showModel, this.showModel[item.key], this.entity);
+        this.setHeight(this.getMaxHeight());
       }
       this.$emit("change", this.showModel);
     },
