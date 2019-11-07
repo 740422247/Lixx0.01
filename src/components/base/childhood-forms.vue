@@ -127,7 +127,11 @@ export default {
     // 变化触发方法
     change(item) {
       if (item.expression) {
-        item.expression(this.showModel, this.showModel[item.key], this.entity);
+        item.expression(
+          this.showModel,
+          this.showModel[item.key],
+          this.controlForms
+        );
         this.setHeight(this.getMaxHeight());
       }
       this.$emit("change", this.getModelData());
@@ -143,29 +147,6 @@ export default {
       return data;
     },
 
-    // 获取表单结果
-    getResult() {
-      if (!this.rules) {
-        return this.getModelData();
-      }
-
-      this.$refs["showModel"].validate(valid => {
-        if (valid) {
-          this.isValid = true;
-        } else {
-          console.warn("error submit!!");
-          this.isValid = false;
-          return false;
-        }
-      });
-
-      if (this.isValid) {
-        return this.getModelData();
-      } else {
-        console.warn("数据验证失败，数据无法返回，请检查");
-        return "数据验证失败，如果想取消验证，无需传入rules属性";
-      }
-    },
     // 查询触发事件
     search() {
       this.$emit("search", this.getModelData());
@@ -191,6 +172,35 @@ export default {
       document
         .querySelector(".demo-form-inline")
         .setAttribute("style", `height:${num}px`);
+    },
+    // 获取表单结果
+    getResult() {
+      if (!this.rules) {
+        return this.getModelData();
+      }
+
+      this.$refs["showModel"].validate(valid => {
+        if (valid) {
+          this.isValid = true;
+        } else {
+          console.warn("error submit!!");
+          this.isValid = false;
+          return false;
+        }
+      });
+
+      if (this.isValid) {
+        return this.getModelData();
+      } else {
+        console.warn("数据验证失败，数据无法返回，请检查");
+        return "数据验证失败，如果想取消验证，无需传入rules属性";
+      }
+    },
+    // 控制表单
+    controlForms(keys, flat) {
+      keys.forEach(key => {
+        this.entity[this.entity.findIndex(item => item.key === key)].invisible = flat
+      })
     }
   }
 };
