@@ -88,13 +88,13 @@ export default {
         label: "身份证号",
         key: "idNum",
         expression: (model, val) => {
-          if (model.idNum.length === 3) {
-            model.age = 25;
-          } else if (model.idNum.length === 5) {
-            model.sex = "男";
-          } else {
-            model.age = "";
-            model.sex = "";
+          if (val.length >= 9) {
+            const birthYear = val.slice(6, 10);
+            model.age = new Date().getFullYear() - birthYear;
+          }
+          if (model.idNum.length >= 5) {
+            const sexNum = val.slice(16, 17);
+            model.sex = sexNum % 2 ? "男" : "女";
           }
         }
       },
@@ -143,6 +143,17 @@ export default {
     },
     change(model) {
       console.log("change:", model);
+    },
+    getExpertAge(data) {
+      const birthYear =
+        data.idNumer && data.idNumer.length > 9 && data.idNumer.slice(6, 10);
+      if (data.idNumer && data.idNumer.length > 9) {
+        const nowYear = new Date().getFullYear();
+        const age = nowYear / 1 - birthYear / 1;
+        return age;
+      } else {
+        return "";
+      }
     }
   }
 };
