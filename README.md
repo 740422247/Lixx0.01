@@ -1,6 +1,6 @@
 # childhood
 
-> 幼儿园管理系统1.0
+> vue + elementUI 快速构建页面
 
 ## Build Setup
 
