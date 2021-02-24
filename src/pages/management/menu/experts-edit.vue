@@ -104,12 +104,29 @@ export default {
         label: "状态",
         key: "state",
         type: "select",
-        options: "state",
-        expression: (model, val, controlForms) => {
+        options: "state", //[{ label: "全部", value: "all" }]
+        expression: (model, val, entity) => {
           if (val === "nouse") {
-            controlForms(["age", "sex", "idNum"], true);
+            for (let i = 0; i < entity.length; i++) {
+              if (
+                entity[i].key === "age" ||
+                entity[i].key === "sex" ||
+                entity[i].key === "idNum"
+              ) {
+                console.log("key:", entity[i].key);
+                entity[i].invisible = true;
+              }
+            }
           } else {
-            controlForms(["age", "sex", "idNum"], false);
+            for (let i = 0; i < entity.length; i++) {
+              if (
+                entity[i].key === "age" ||
+                entity[i].key === "sex" ||
+                entity[i].key === "idNum"
+              ) {
+                entity[i].invisible = false;
+              }
+            }
           }
         }
       }
